@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TableACreated;
+use App\Models\TableA;
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -46,5 +49,32 @@ class SearchController extends Controller
 
         return response()->json($results);
 
+    }
+
+    public function checkPrices()
+    {
+        $response = Http::get('https://dummyjson.com/products');
+        $products = $response->json()['products'];
+
+
+        $users = User::all();
+
+
+        foreach ($users as $user) {
+            Mail::to($user->email)->send(new PriceNotificationMail($products));
+        }
+
+        return "Price check completed and emails sent.";
+
+    }
+
+    public function tablerecord()
+    {
+        $tableA = new TableA();
+        $tableA->name = 'test';
+        $tableA->user_star = 5;
+        $tableA->save();
+        
+        event(new TableACreated($tableA));
     }
 }

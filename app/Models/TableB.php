@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class TableB extends Model
+{
+    use HasFactory;
+    protected $fillable = ['id', 'updated_at', 'star_count', 'table_a_id'];
+
+}
